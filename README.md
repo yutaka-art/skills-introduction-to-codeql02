@@ -16,38 +16,47 @@ _アプリケーションのソースコードのセキュリティを確保す�
 </header>
 
 <!--
-  <<< 著者向けメモ: ステップ 1 >>>
-  コースには 3〜5 ステップを設定しましょう。
-  最初のステップは簡単なものにするのがおすすめです！
-  詳細説明には docs.github.com へのリンクを活用しましょう。
-  新しいタブで開くようにユーザーに促してください。
+  <<< Author notes: Step 1 >>>
+  コースには3～5ステップを選んでください。
+  最初のステップは簡単なものにしましょう！
+  詳細説明は docs.github.com へのリンクを貼ってください。
+  ステップごとに新しいタブで開くことを推奨してください！
+  TBD-step-1-notes.
 -->
 
-## ようこそ
+## ステップ 1: CodeQL を有効化しよう
 
-_「CodeQL 入門」へようこそ！ :wave:_
+👋 こんにちは！GitHub Skills コース「コードスキャンを有効化しよう」へようこそ！
 
-このコースでは、[CodeQL](https://codeql.github.com/) を活用した GitHub のコードスキャン機能を使って、セキュリティ脆弱性につながる一般的なコーディングパターンを特定する方法を学びます。  
-実際にご自身のリポジトリでコードスキャンを有効にし、脆弱性の特定・修正・予防を体験していただきます。
+さっそく始めましょう！
 
-コードスキャンは [GitHub Advanced Security (GHAS)](https://docs.github.com/ja/get-started/learning-about-github/about-github-advanced-security) の一部です。Advanced Security のすべての機能は、オープンソースのパブリックリポジトリに対しては 100% 無料で利用できます。
+この最初のステップでは、CodeQL について学び、ソースコードを安全に保つ方法を体験します。
 
-- **対象者**：開発者、セキュリティエンジニア、OSSメンテナー
-- **学べること**：CodeQL によるコードスキャンの有効化方法と、SQLインジェクションの検出方法を学びます
-- **作成するもの**：本番コードに新たな脆弱性が混入するのを防ぐ、安全なソフトウェア開発パイプライン
-- **前提知識**：このコースでは、Pull Request、GitHub Actions、ソースコードなどの基本的な GitHub の概念に加えて、SAST（静的アプリケーションセキュリティテスト）の基礎的な知識が求められます。ただし難しい部分は丁寧に説明しますのでご安心ください 🙂
-- **所要時間**：全4ステップ、30分以内で完了できます
+**GitHub コードスキャンとは**: _[コードスキャン](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)_ は、開発チームがセキュリティテストツールをソフトウェア開発プロセスに統合できる機能です。これは GitHub Actions を使って実現されます。コードスキャンでは、SAST、コンテナ、インフラストラクチャ as Code のセキュリティツールなど、さまざまなツールを統合できます。
 
-## コースの始め方
+**CodeQL とは**: _[CodeQL](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql)_ は、SQLインジェクションやクロスサイトスクリプティング、コードインジェクションなどのセキュリティ上の弱点を特定する静的解析テストツールです。
 
-[![start-course](https://user-images.githubusercontent.com/1221423/235727646-4a590299-ffe5-480d-8cd5-8194ea184546.svg)](https://github.com/new?template_owner=yutaka-art&template_name=introduction-to-codeql&owner=%40me&name=skills-introduction-to-codeql&description=GitHub+Skills:+Introduction+to+CodeQL&visibility=public)
+### :keyboard: アクティビティ: CodeQL でコードスキャンを有効化しよう
 
-1. **「start-course」** を右クリックして、新しいタブでリンクを開いてください。
-2. 新しいタブでは、多くの項目が自動で入力されます。
-   - オーナーにはご自身の個人アカウント、またはホストしたい組織を選択してください。
-   - プライベートリポジトリでは [Actions の実行分数](https://docs.github.com/ja/billing/managing-billing-for-github-actions/about-billing-for-github-actions)が消費されるため、パブリックリポジトリをおすすめします。
-   - フォーム下部にある **「Create repository」** ボタンをクリックしてください。
-3. リポジトリが作成されたら、約20秒待ってからページを更新し、新しいリポジトリの README に記載された手順に従ってください。
+まず、リポジトリで CodeQL を使ったコードスキャンを有効化します。
+
+1. 新しいブラウザタブを開き、このタブで手順を読みながら、もう一方のタブで作業を進めてください。
+2. 作成したリポジトリの上部にある **Settings（設定）** タブに移動します。
+3. 左側の **Security（セキュリティ）** セクションから **Code security and analysis（コードセキュリティと分析）** を選択します。
+4. **Code scanning（コードスキャン）** というセクションまでスクロールします。このコースでは CodeQL 分析に注目します。
+5. **Set up（セットアップ）** ドロップダウンメニューをクリックし、**Default（デフォルト）** を選択します。
+![enable-code-scanning-default.png](/images/enable-code-scanning-default.png)
+
+モーダルの設定オプションを見てみましょう：
+
+  - **Languages to analyze（解析する言語）:** CodeQL でスキャンする言語です。今回は `Python` をスキャンします。
+  - **Query suites（クエリスイート）:** CodeQL の[クエリ](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries)は「スイート」と呼ばれるバンドルで提供されます。このセクションで使用するクエリスイートを選択できます。今回は **Default** のままにします。詳細は「[CodeQL クエリについて](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries)」をご覧ください。
+  - **Events（イベント）:** いつ CodeQL がスキャンを実行するかを指定します。今回は `main` ブランチへのプルリクエスト時にスキャンされます。
+
+![codeql-default-configuration-box.png](/images/codeql-default-configuration-box.png)
+
+6. **Enable CodeQL（CodeQL を有効化）** をクリックします。
+7. 約20秒待ってから、このページ（手順を読んでいるページ）をリフレッシュしてください。[GitHub Actions](https://docs.github.com/ja/actions) が自動的に次のステップへ進みます。
 
 <footer>
 
