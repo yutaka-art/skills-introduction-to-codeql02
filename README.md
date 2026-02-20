@@ -16,47 +16,95 @@ _アプリケーションのソースコードのセキュリティを確保す�
 </header>
 
 <!--
-  <<< Author notes: Step 1 >>>
-  コースには3～5ステップを選んでください。
-  最初のステップは簡単なものにしましょう！
-  詳細説明は docs.github.com へのリンクを貼ってください。
-  ステップごとに新しいタブで開くことを推奨してください！
-  TBD-step-1-notes.
+  <<< Author notes: Step 2 >>>
+  前のステップを認識してこのステップを始めてください。
+  用語を定義し、docs.github.com へのリンクを貼ってください。
+  TBD-step-2-notes.
 -->
 
-## ステップ 1: CodeQL を有効化しよう
+## ステップ 2: CodeQL アラートの確認とトリアージ
 
-👋 こんにちは！GitHub Skills コース「コードスキャンを有効化しよう」へようこそ！
+_素晴らしい！CodeQL が動作しました！ :tada:_
 
-さっそく始めましょう！
+この演習では、CodeQL スキャン結果の確認、アラートのトリアージ、アラートを追跡するための GitHub Issue の作成を行います。
 
-この最初のステップでは、CodeQL について学び、ソースコードを安全に保つ方法を体験します。
+**GitHub Actions とは**: GitHub Actions は GitHub 内の自動化・CI/CD プラットフォームです。コードスキャンによるセキュリティスキャンの実行や管理に利用します。GitHub Actions はビルド、テスト、デプロイのパイプラインを自動化できる継続的インテグレーション／継続的デリバリー（CI/CD）プラットフォームです。詳細は「[GitHub Actions について](https://docs.github.com/ja/actions/learn-github-actions/understanding-github-actions)」をご覧ください。
 
-**GitHub コードスキャンとは**: _[コードスキャン](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)_ は、開発チームがセキュリティテストツールをソフトウェア開発プロセスに統合できる機能です。これは GitHub Actions を使って実現されます。コードスキャンでは、SAST、コンテナ、インフラストラクチャ as Code のセキュリティツールなど、さまざまなツールを統合できます。
+**CWE とは**: Common Weakness Enumeration（CWE）は、ハードウェアやソフトウェアの弱点・脆弱性を分類するためのカテゴリシステムです。アプリケーションのソースコードにおけるセキュリティ問題を記述・分類する方法と考えてください。CWE の詳細は Wikipedia の「[Common Weakness Enumeration](https://ja.wikipedia.org/wiki/Common_Weakness_Enumeration)」をご覧ください。
 
-**CodeQL とは**: _[CodeQL](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql)_ は、SQLインジェクションやクロスサイトスクリプティング、コードインジェクションなどのセキュリティ上の弱点を特定する静的解析テストツールです。
+### :keyboard: アクティビティ 1: CodeQL スキャンのステータスを確認しよう
 
-### :keyboard: アクティビティ: CodeQL でコードスキャンを有効化しよう
+このアクティビティでは、GitHub Actions で CodeQL スキャンのステータスを確認します。  
+1. 新しいリポジトリで、上部ナビゲーションバーから **Actions** を選択して Actions ページに移動します。CodeQL Action の実行がまだ進行中の場合、黄色いスピナーが表示されます。通常、完了まで約4分かかります。
+2. **CodeQL Setup** をクリックして実行を選択します。
 
-まず、リポジトリで CodeQL を使ったコードスキャンを有効化します。
+![codeql-setup](/images/codeql-setup.png)
 
-1. 新しいブラウザタブを開き、このタブで手順を読みながら、もう一方のタブで作業を進めてください。
-2. 作成したリポジトリの上部にある **Settings（設定）** タブに移動します。
-3. 左側の **Security（セキュリティ）** セクションから **Code security and analysis（コードセキュリティと分析）** を選択します。
-4. **Code scanning（コードスキャン）** というセクションまでスクロールします。このコースでは CodeQL 分析に注目します。
-5. **Set up（セットアップ）** ドロップダウンメニューをクリックし、**Default（デフォルト）** を選択します。
-![enable-code-scanning-default.png](/images/enable-code-scanning-default.png)
+Actions の実行内ではさらに多くの情報が確認できます。CodeQL のログ、所要時間、ステータス、生成されたアーティファクトなどを自由に確認してみてください。
 
-モーダルの設定オプションを見てみましょう：
+スキャンが完了すると、実行の横に緑色のチェックが表示されます。  
+  
+### :keyboard: アクティビティ 2: すべての CodeQL アラートを確認しよう
 
-  - **Languages to analyze（解析する言語）:** CodeQL でスキャンする言語です。今回は `Python` をスキャンします。
-  - **Query suites（クエリスイート）:** CodeQL の[クエリ](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries)は「スイート」と呼ばれるバンドルで提供されます。このセクションで使用するクエリスイートを選択できます。今回は **Default** のままにします。詳細は「[CodeQL クエリについて](https://docs.github.com/ja/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries)」をご覧ください。
-  - **Events（イベント）:** いつ CodeQL がスキャンを実行するかを指定します。今回は `main` ブランチへのプルリクエスト時にスキャンされます。
+このアクティビティでは、リポジトリの Security ページで CodeQL の検出結果を確認します。Security ページには、すべてのセキュリティ関連情報が表示されます。
 
-![codeql-default-configuration-box.png](/images/codeql-default-configuration-box.png)
+1. リポジトリ上部のナビゲーションバーから **Security** タブに移動します。  
+2. 左側の「Vulnerability alerts」見出しの下にある **Code scanning** を選択します。
 
-6. **Enable CodeQL（CodeQL を有効化）** をクリックします。
-7. 約20秒待ってから、このページ（手順を読んでいるページ）をリフレッシュしてください。[GitHub Actions](https://docs.github.com/ja/actions) が自動的に次のステップへ進みます。
+この画面には、CodeQL がこのリポジトリのコードベースで特定したすべての脆弱性が表示されます。さまざまなフィルターや検索機能も試してみてください。多くの検出結果がある場合に非常に役立ちます！
+
+
+### :keyboard: アクティビティ 3: アラートを確認しよう
+
+このアクティビティでは、アラートの UI を確認します。脆弱性のデータフローを確認し、どのコード部分に影響があるかを特定し、アラートの詳細情報を取得します。
+
+**アラートステータス:** このセクションでは、現在のアラートステータス（オープンまたはクローズ）、スキャンでアラートが検出されたブランチ、アラートのタイムスタンプが表示されます。
+  
+![alert-status](/images/alert-status.png)
+
+**場所情報:** このセクションでは、どのコード部分が脆弱かを示します。  
+  
+![location-information](/images/location-information.png)
+
+**パス:** 「Show paths」をクリックすると、アラートのデータフローに関する追加情報が表示されます。モーダルでは、ユーザー入力（「ソース」と呼びます）がアプリケーション内をどのように流れ、最終的にどこで利用されるか（「シンク」と呼びます）が可視化されます。これにより、アプリケーション内のデータの流れが分かります。
+  
+**推奨事項:** このセクションでは、ツール（この場合は CodeQL）、ルールID、脆弱性を検出した CodeQL クエリの表示（**View source** で確認可能）、および修正のための推奨事項が表示されます。**Show more** をクリックすると、推奨事項の全文が表示されます。
+
+![recommendations](/images/recommendations.png)
+
+**監査証跡:** 監査証跡にはアラートの履歴が表示されます。ユーザーがアラートをクローズしたり、コードで修正した場合のステータスが記録されます。
+
+![audit-trail](/images/audit-trail.png)
+
+**アラートのトリアージ:** アラート右上のボタンでトリアージや新しい Issue の作成ができます。まだ何もしないでください。これらのボタンについては後ほど説明します。😄
+
+**追加情報:** 右側のパネルには、タグ、CWE 情報、アラートの重大度などが表示されます。
+  ![additional-information.png](/images/additiona-information.png)
+
+
+### :keyboard: アクティビティ 4: アラートを却下しよう
+
+アラート画面の構成に慣れたところで、アラートをクローズする手順を体験しましょう。
+
+1. 同じアラート画面で **Dismiss alert** をクリックし、却下理由を選択して簡単なメモを入力します。
+2. **Dismiss alert** をクリックします。
+3. これでアラートの状態が「Dismissed（却下）」に変わります。アラート下部の監査証跡で変更履歴を確認できます。
+4. **Security** > **Code scanning alerts** に戻ると、アラートが1件だけリストされているのが分かります。
+5. **1 Closed** をクリックすると、クローズされたアラート一覧が表示され、先ほど却下したアラートを確認できます。
+   ![one-closed-alert.png](/images/one-closed-alert.png)
+
+7. （オプション）アラートを再度開き、**Reopen alert** を選択することでアラートを再オープンすることもできます。
+
+### :keyboard: アクティビティ 5: アラートの GitHub Issue を作成しよう
+
+最後のステップでは、脆弱性の解決作業を追跡するための GitHub Issue の作成方法を紹介します。Issue はセキュリティ問題に関するコラボレーションの場を提供し、担当者やチームに割り当てることができます。
+  
+1. CodeQL のスキャンで検出されたオープンなアラートのいずれかを開きます。
+2. アラート右上の緑色の **Create issue** ボタンをクリックします。ボタンが表示されない場合は、アラートがオープン状態か確認してください。
+3. 新しい Issue フォームに必要な詳細を入力します。  
+4. **Submit new issue** をクリックします。
+5. Issue を確認するには、リポジトリ上部の **Issues** をクリックします。
+6. 約20秒待ってから、このページ（手順を読んでいるページ）をリフレッシュしてください。[GitHub Actions](https://docs.github.com/ja/actions) が自動的に次のステップへ進みます。
 
 <footer>
 
